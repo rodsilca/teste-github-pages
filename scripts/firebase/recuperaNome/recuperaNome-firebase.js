@@ -1,4 +1,6 @@
-import appPrincipal from '../init/firebase-init.js';
+import { initFirebaseCompat } from './init/firebase-init.js';
+
+await initFirebaseCompat();
 
 document.addEventListener("DOMContentLoaded", function() {
     const nomeUsuarioLogadoElement = document.getElementById("nomeUsuarioLogado");
