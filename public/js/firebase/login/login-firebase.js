@@ -33,10 +33,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function login(email,senha){
     firebase.auth().signInWithEmailAndPassword(email,senha).then(response => {
-        window.location.href = "../dashboard/index.html"; //tem que mudar essa referencia quando colocarem a tela principal no repositorio
+        window.location.href = "../../../dashboard/index.html"; //tem que mudar essa referencia quando colocarem a tela principal no repositorio
     }).catch(error => {
-        alert(error.code)
-        console.log('error',response)
+      alert("Erro no login: " + error.code);
+      console.error("Erro ao fazer login:", error);
     });
     
   }
