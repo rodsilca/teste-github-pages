@@ -1,21 +1,21 @@
-const ctxBarra = document.getElementById('meuGraficoDeBarras').getContext('2d'); // Use um novo ID para o canvas
+const ctxBarra = document.getElementById('meuGraficoDeBarras').getContext('2d'); 
 const meuGraficoDeBarras = new Chart(ctxBarra, {
     type: 'bar',
     data: {
-        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'], // Adicione os rótulos para o eixo x
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'], 
         datasets: [{
-            label: 'Umidade ( % )', // Adicione um rótulo para o conjunto de dados
-            data: [62, 45, 37, 77, 83, 21], // Mantenha ou ajuste os valores
+            label: 'Umidade ( % )', 
+            data: [62, 45, 37, 77, 83, 21], 
             backgroundColor: [
-                'rgb(19, 51, 34)' // Adapte as cores se desejar
+                'rgb(19, 51, 34)' 
             ],
             borderColor: [
                 'rgb(19, 51, 34)'
             ],
             borderWidth: 1
         },{
-            label: 'Temperatura ( °C )', // Adicione um rótulo para o conjunto de dados
-            data: [27, 31, 34, 29, 32, 37], // Mantenha ou ajuste os valores
+            label: 'Temperatura ( °C )', 
+            data: [27, 31, 34, 29, 32, 37], 
             backgroundColor: [
                 'rgb(83, 117, 58)'
             ],
@@ -29,8 +29,8 @@ const meuGraficoDeBarras = new Chart(ctxBarra, {
         scales: {
             y: {
                 responsive: false,
-                beginAtZero: true, // Começar o eixo y em 0 é comum em gráficos de barra
-                max: 100 // Se você quiser manter o eixo Y até 100
+                beginAtZero: true, 
+                max: 100 
                 
             }
         }

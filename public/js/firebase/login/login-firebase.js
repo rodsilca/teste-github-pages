@@ -33,7 +33,7 @@ form.addEventListener("submit", function (e) {
 function login(email,senha){
   firebase.auth().signInWithEmailAndPassword(email,senha).then((response) => {
     console.log("Login bem-sucedido:", response.user.email);
-      window.location.href = "../../../dashboard/index.html"; //tem que mudar essa referencia quando colocarem a tela principal no repositorio
+      window.location.href = "../../../dashboard/index.html";
   }).catch((error) => {
     alert("Erro no login: " + error.code);
     console.error("Erro ao fazer login:", error);

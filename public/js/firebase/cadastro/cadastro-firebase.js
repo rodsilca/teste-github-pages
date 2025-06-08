@@ -53,9 +53,9 @@ function register(email,confirmarSenha, primeiroNome, ultimoNome){
       });
     });
   }).then(() => {
-      // Esse .then() e executado apos o updateProfile e o set no realtime serem derem certo
+      // esse .then() e executado apos o updateProfile e o set no realtime serem derem certo
       console.log("Dados do usuário salvos no Realtime Database!");
-      window.location.href = '../index.html'; // redireciona para a tela de login
+      window.location.href = '../index.html'; 
       
   }).catch((error) => {
       console.error("Erro detalhado ao cadastrar usuário:", error);

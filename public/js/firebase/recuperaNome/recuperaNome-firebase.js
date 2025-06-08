@@ -7,7 +7,6 @@ const nomeUsuarioLogadoElement = document.getElementById("nomeUsuarioLogado");
 
 if (!nomeUsuarioLogadoElement) {
     console.error("Elemento com ID 'nomeUsuarioLogado' não encontrado no HTML.");
-    // return; // Você pode decidir parar aqui ou continuar sem exibir o nome
 }
 
 firebase.auth().onAuthStateChanged((user) => {
@@ -16,16 +15,16 @@ firebase.auth().onAuthStateChanged((user) => {
         console.log("Usuário logado no dashboard:", user.uid, user.email);
         
         if (nomeUsuarioLogadoElement) {
-            nomeUsuarioLogadoElement.textContent = "Buscando nome..."; // Feedback visual
+            nomeUsuarioLogadoElement.textContent = "Buscando nome..."; 
         }
 
         const uid = user.uid;
-        const db = firebase.database(); // Inicializa o acesso ao DB aqui
+        const db = firebase.database(); 
 
-        // Buscar os dados do usuário no Realtime Database
+       
         db.ref('users/' + uid).once('value')
             .then((snapshot) => {
-                let nomeExibicao = user.displayName || user.email; // Fallback inicial
+                let nomeExibicao = user.displayName || user.email; 
 
                 if (snapshot.exists()) {
                     const userData = snapshot.val();
@@ -50,19 +49,16 @@ firebase.auth().onAuthStateChanged((user) => {
             .catch((error) => {
                 console.error("Erro ao buscar dados do perfil do usuário:", error);
                 if (nomeUsuarioLogadoElement) {
-                    nomeUsuarioLogadoElement.textContent = user.displayName || user.email || "Usuário"; // Fallback em caso de erro no DB
+                    nomeUsuarioLogadoElement.textContent = user.displayName || user.email || "Usuário"; 
                 }
             });
 
     } else {
-        // Usuário não está logado
+       
         console.log("Nenhum usuário logado. Redirecionando para login...");
         if (nomeUsuarioLogadoElement) {
             nomeUsuarioLogadoElement.textContent = "Visitante";
         }
-        // Redirecionar para a página de login se não estiver logado e esta página for protegida
-        // Certifique-se de que o caminho para login.html está correto e que você não está
-        // criando um loop de redirecionamento se esta já for uma página acessível sem login.
-        // Exemplo: window.location.href = '../login/login.html'; 
+        
     }
 });
