@@ -1,4 +1,4 @@
-import { initFirebaseCompat } from './init/firebase-init.js';
+import { initFirebaseCompat } from '../init/firebase-init.js';
 
 await initFirebaseCompat();
 
