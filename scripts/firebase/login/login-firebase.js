@@ -1,6 +1,4 @@
-import { initFirebaseCompat } from './init/firebase-init.js';
 
-await initFirebaseCompat();
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector("form");
