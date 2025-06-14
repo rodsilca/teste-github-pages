@@ -103,8 +103,8 @@ firebase.auth().onAuthStateChanged((user) => {
                 templateClone.querySelector(".saidaUmidade").textContent = dadosFormatados.umidade;
                 templateClone.querySelector(".saidaTemperatura").textContent = dadosFormatados.temperatura;
                 
-                templateClone.querySelector(".saidaUmidade").textContent = dadosFormatados.umidade || 'Umidade: --';
-                templateClone.querySelector(".saidaTemperatura").textContent = dadosFormatados.temperatura || 'Temp.: --';
+                templateClone.querySelector(".saidaUmidade").textContent = dadosFormatados.umidade+" %" || 'Umidade: --';
+                templateClone.querySelector(".saidaTemperatura").textContent = dadosFormatados.temperatura+" °C" || 'Temp.: --';
 
                 listaHistoricoContainer.appendChild(templateClone);
             });
