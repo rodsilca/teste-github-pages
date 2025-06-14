@@ -45,12 +45,27 @@ function register(email,confirmarSenha, primeiroNome, ultimoNome){
         console.log("DisplayName atualizado no perfil do Auth.");
         
         const db = firebase.database();
-        return db.ref('users/' + uid).set({
-          primeiroNome: primeiroNome,
-          sobrenome: ultimoNome,
-          email: email, 
-          dataCadastro: new Date().toISOString()
-      });
+        const dadosNovoUsuario = {
+          perfil: {
+            primeiroNome: primeiroNome,
+            sobrenome: ultimoNome,
+            email: email,
+            dataCadastro: new Date().toISOString()
+          },
+          sensor: {
+            temperatura: 0,
+            umidade: 0
+          },
+          historico: true
+        };
+
+        return db.ref('users/' + uid).set(dadosNovoUsuario);
+        //   return db.ref('users/' + uid).set({
+        //     primeiroNome: primeiroNome,
+        //     sobrenome: ultimoNome,
+        //     email: email, 
+        //     dataCadastro: new Date().toISOString()
+        // });
     });
   }).then(() => {
       // esse .then() e executado apos o updateProfile e o set no realtime serem derem certo
