@@ -4,37 +4,60 @@ await initFirebaseCompat();
 
 
 var db = firebase.database();
-var refTemperatura = db.ref("sensor/temperatura/");
-var refUmidade = db.ref("sensor/umidade/");
-var refHistorico = db.ref("historico/");
 
 const listaHistoricoContainer = document.getElementById('lista-historico-container');
 const itemTemplate = document.getElementById('historico-item-template');
 
-refTemperatura.on("value", (snapshot) => {
-    const data = snapshot.val();
-    const numeros = Object.keys(data);
-    const ultimaChave = numeros[numeros.length -1];
-    const ultimoValor = data[ultimaChave];
-    console.log("Dados recuperados:", data);
-    
-    // Exemplo de exibição no HTML
-    document.getElementById("saidaTemperatura").textContent = ultimoValor;
-    
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        // --- O USUÁRIO ESTÁ LOGADO ---
+        console.log("Usuário logado encontrado. UID:", user.uid);
+
+        // 3. Pega o UID do usuário e cria a referência DINÂMICA
+        const uid = user.uid;
+        const refTemperatura = db.ref('users/' + uid + '/sensor/temperatura');
+        
+        refTemperatura.on("value", (snapshot) => {
+            const data = snapshot.val();
+            const numeros = Object.keys(data);
+            const ultimaChave = numeros[numeros.length -1];
+            const ultimoValor = data[ultimaChave];
+            console.log("Dados recuperados:", data);
+            
+            // Exemplo de exibição no HTML
+            document.getElementById("saidaTemperatura").textContent = ultimoValor + " °C";
+
+            criarOuAtualizarGraficoTemperatura(ultimoValor);
+            
+        });
+    }
 });
 
 
-refUmidade.on("value", (snapshot) => {
-    const data = snapshot.val();
-    const numeros = Object.keys(data);
-    const ultimaChave = numeros[numeros.length -1];
-    const ultimoValor = data[ultimaChave];
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        // --- O USUÁRIO ESTÁ LOGADO ---
+        console.log("Usuário logado encontrado. UID:", user.uid);
 
-    console.log("Dados recuperados:", data);
-    
+        // 3. Pega o UID do usuário e cria a referência DINÂMICA
+        const uid = user.uid;
+        const refUmidade = db.ref('users/' + uid + '/sensor/umidade');
 
-    // Exemplo de exibição no HTML
-    document.getElementById("saidaUmidade").textContent = ultimoValor;
+        refUmidade.on("value", (snapshot) => {
+            const data = snapshot.val();
+            const numeros = Object.keys(data);
+            const ultimaChave = numeros[numeros.length -1];
+            const ultimoValor = data[ultimaChave];
+
+            console.log("Dados recuperados:", data);
+            
+
+            // Exemplo de exibição no HTML
+            document.getElementById("saidaUmidade").textContent = ultimoValor + " %";
+
+            criarOuAtualizarGraficoUmidade(ultimoValor);
+        });
+    }
 });
 
 
@@ -93,44 +116,56 @@ function parseValorHistorico(valorString) {
     }
 }
 
-refHistorico.orderByKey().limitToLast(20).on("value", (snapshot) => {
-    listaHistoricoContainer.innerHTML = ''; 
 
-    if (!snapshot.exists()) {
-        listaHistoricoContainer.textContent = 'Nenhum histórico encontrado.';
-        console.log("Nenhum dado no snapshot.");
-        return;
-    }
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        // --- O USUÁRIO ESTÁ LOGADO ---
+        console.log("Usuário logado encontrado. UID:", user.uid);
 
-    const itemsParaExibir = [];
-    snapshot.forEach((childSnapshot) => {
-        // childSnapshot.val() é a string "Mensagem! DD/MM/YYYY HH:MM:SS"
-        itemsParaExibir.push(childSnapshot.val());
-    });
+        // 3. Pega o UID do usuário e cria a referência DINÂMICA
+        const uid = user.uid;
+        const refHistorico = db.ref('users/' + uid + '/historico');
 
-   
-    itemsParaExibir.reverse();
+        refHistorico.orderByKey().limitToLast(20).on("value", (snapshot) => {
+            listaHistoricoContainer.innerHTML = ''; 
 
-    itemsParaExibir.forEach(valorString => {
-        const dadosFormatados = parseValorHistorico(valorString);
+            if (!snapshot.exists()) {
+                listaHistoricoContainer.textContent = 'Nenhum histórico encontrado.';
+                console.log("Nenhum dado no snapshot.");
+                return;
+            }
 
-        const templateClone = itemTemplate.content.cloneNode(true);
+            const itemsParaExibir = [];
+            snapshot.forEach((childSnapshot) => {
+                // childSnapshot.val() é a string "Mensagem! DD/MM/YYYY HH:MM:SS"
+                itemsParaExibir.push(childSnapshot.val());
+            });
 
-        templateClone.querySelector(".historicoOrderData").textContent = dadosFormatados.data;
-        templateClone.querySelector(".historicoOrderHora").textContent = dadosFormatados.hora;
-        templateClone.querySelector(".historicoOrderStatus").textContent = dadosFormatados.status;
-        templateClone.querySelector(".saidaUmidade").textContent = dadosFormatados.umidade;
-        templateClone.querySelector(".saidaTemperatura").textContent = dadosFormatados.temperatura;
         
-        templateClone.querySelector(".saidaUmidade").textContent = dadosFormatados.umidade || 'Umidade: --';
-        templateClone.querySelector(".saidaTemperatura").textContent = dadosFormatados.temperatura || 'Temp.: --';
+            itemsParaExibir.reverse();
 
-        listaHistoricoContainer.appendChild(templateClone);
-    });
+            itemsParaExibir.forEach(valorString => {
+                const dadosFormatados = parseValorHistorico(valorString);
 
-    console.log("Dados recuperados e exibidos.");
+                const templateClone = itemTemplate.content.cloneNode(true);
 
-}, (error) => {
-    console.error("Erro ao buscar dados do Firebase: ", error);
-    listaHistoricoContainer.textContent = 'Erro ao carregar histórico.';
+                templateClone.querySelector(".historicoOrderData").textContent = dadosFormatados.data;
+                templateClone.querySelector(".historicoOrderHora").textContent = dadosFormatados.hora;
+                templateClone.querySelector(".historicoOrderStatus").textContent = dadosFormatados.status;
+                templateClone.querySelector(".saidaUmidade").textContent = dadosFormatados.umidade;
+                templateClone.querySelector(".saidaTemperatura").textContent = dadosFormatados.temperatura;
+                
+                templateClone.querySelector(".saidaUmidade").textContent = dadosFormatados.umidade || 'Umidade: --';
+                templateClone.querySelector(".saidaTemperatura").textContent = dadosFormatados.temperatura || 'Temp.: --';
+
+                listaHistoricoContainer.appendChild(templateClone);
+            });
+
+            console.log("Dados recuperados e exibidos.");
+
+        }, (error) => {
+            console.error("Erro ao buscar dados do Firebase: ", error);
+            listaHistoricoContainer.textContent = 'Erro ao carregar histórico.';
+        });
+    }
 });

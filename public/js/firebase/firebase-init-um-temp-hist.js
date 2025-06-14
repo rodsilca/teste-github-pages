@@ -7,32 +7,54 @@ var refTemperatura = db.ref("sensor/temperatura/");
 var refUmidade = db.ref("sensor/umidade/");
 
 
-refTemperatura.on("value", (snapshot) => {
-    const data = snapshot.val();
-    const numeros = Object.keys(data);
-    const ultimaChave = numeros[numeros.length -1];
-    const ultimoValor = data[ultimaChave];
-    console.log("Dados recuperados:", data);
-    
-    // Exemplo de exibição no HTML
-    document.getElementById("saidaTemperatura").textContent = ultimoValor;
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        // --- O USUÁRIO ESTÁ LOGADO ---
+        console.log("Usuário logado encontrado. UID:", user.uid);
 
-    criarOuAtualizarGraficoTemperatura(ultimoValor);
-    
+        // 3. Pega o UID do usuário e cria a referência DINÂMICA
+        const uid = user.uid;
+        const refTemperatura = db.ref('users/' + uid + '/sensor/temperatura');
+        
+        refTemperatura.on("value", (snapshot) => {
+            const data = snapshot.val();
+            const numeros = Object.keys(data);
+            const ultimaChave = numeros[numeros.length -1];
+            const ultimoValor = data[ultimaChave];
+            console.log("Dados recuperados:", data);
+            
+            // Exemplo de exibição no HTML
+            document.getElementById("saidaTemperatura").textContent = ultimoValor + " °C";
+
+            criarOuAtualizarGraficoTemperatura(ultimoValor);
+            
+        });
+    }
 });
 
 
-refUmidade.on("value", (snapshot) => {
-    const data = snapshot.val();
-    const numeros = Object.keys(data);
-    const ultimaChave = numeros[numeros.length -1];
-    const ultimoValor = data[ultimaChave];
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        // --- O USUÁRIO ESTÁ LOGADO ---
+        console.log("Usuário logado encontrado. UID:", user.uid);
 
-    console.log("Dados recuperados:", data);
-    
+        // 3. Pega o UID do usuário e cria a referência DINÂMICA
+        const uid = user.uid;
+        const refUmidade = db.ref('users/' + uid + '/sensor/umidade');
 
-    // Exemplo de exibição no HTML
-    document.getElementById("saidaUmidade").textContent = ultimoValor;
+        refUmidade.on("value", (snapshot) => {
+            const data = snapshot.val();
+            const numeros = Object.keys(data);
+            const ultimaChave = numeros[numeros.length -1];
+            const ultimoValor = data[ultimaChave];
 
-    criarOuAtualizarGraficoUmidade(ultimoValor);
+            console.log("Dados recuperados:", data);
+            
+
+            // Exemplo de exibição no HTML
+            document.getElementById("saidaUmidade").textContent = ultimoValor + " %";
+
+            criarOuAtualizarGraficoUmidade(ultimoValor);
+        });
+    }
 });

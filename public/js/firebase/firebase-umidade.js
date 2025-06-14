@@ -4,25 +4,34 @@ await initFirebaseCompat();
 
 
 var db = firebase.database();
-var refTemperatura = db.ref("sensor/temperatura/");
-var refUmidade = db.ref("sensor/umidade/");
-var refHistorico = db.ref("historico/");
+//var refUmidade = db.ref("sensor/umidade/");
 
 const refUltimasUmidades = db.ref("sensor/umidade/").orderByKey().limitToLast(10);
 
-refUmidade.on("value", (snapshot) => {
-    const data = snapshot.val();
-    const numeros = Object.keys(data);
-    const ultimaChave = numeros[numeros.length -1];
-    const ultimoValor = data[ultimaChave];
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        // --- O USUÁRIO ESTÁ LOGADO ---
+        console.log("Usuário logado encontrado. UID:", user.uid);
 
-    console.log("Dados recuperados:", data);
-    
+        // 3. Pega o UID do usuário e cria a referência DINÂMICA
+        const uid = user.uid;
+        const refUmidade = db.ref('users/' + uid + '/sensor/umidade');
 
-    // Exemplo de exibição no HTML
-    document.getElementById("saidaUmidade").textContent = ultimoValor + " %";
+        refUmidade.on("value", (snapshot) => {
+            const data = snapshot.val();
+            const numeros = Object.keys(data);
+            const ultimaChave = numeros[numeros.length -1];
+            const ultimoValor = data[ultimaChave];
 
-    criarOuAtualizarGraficoUmidade(ultimoValor);
+            console.log("Dados recuperados:", data);
+            
+
+            // Exemplo de exibição no HTML
+            document.getElementById("saidaUmidade").textContent = ultimoValor + " %";
+
+            criarOuAtualizarGraficoUmidade(ultimoValor);
+        });
+    }
 });
 
 refUltimasUmidades.on("value", (snapshot) => {
