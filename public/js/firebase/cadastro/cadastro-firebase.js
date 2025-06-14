@@ -53,8 +53,8 @@ function register(email,confirmarSenha, primeiroNome, ultimoNome){
             dataCadastro: new Date().toISOString()
           },
           sensor: {
-            temperatura: 0,
-            umidade: 0
+            temperatura: true,
+            umidade: true
           },
           historico: true
         };
