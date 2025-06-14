@@ -8,58 +8,6 @@ var db = firebase.database();
 const listaHistoricoContainer = document.getElementById('lista-historico-container');
 const itemTemplate = document.getElementById('historico-item-template');
 
-firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-        // --- O USUÁRIO ESTÁ LOGADO ---
-        console.log("Usuário logado encontrado. UID:", user.uid);
-
-        // 3. Pega o UID do usuário e cria a referência DINÂMICA
-        const uid = user.uid;
-        const refTemperatura = db.ref('users/' + uid + '/sensor/temperatura');
-        
-        refTemperatura.on("value", (snapshot) => {
-            const data = snapshot.val();
-            const numeros = Object.keys(data);
-            const ultimaChave = numeros[numeros.length -1];
-            const ultimoValor = data[ultimaChave];
-            console.log("Dados recuperados:", data);
-            
-            // Exemplo de exibição no HTML
-            document.getElementById("saidaTemperatura").textContent = Math.round(ultimoValor) + " °C";
-
-            criarOuAtualizarGraficoTemperatura(ultimoValor);
-            
-        });
-    }
-});
-
-
-firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-        // --- O USUÁRIO ESTÁ LOGADO ---
-        console.log("Usuário logado encontrado. UID:", user.uid);
-
-        // 3. Pega o UID do usuário e cria a referência DINÂMICA
-        const uid = user.uid;
-        const refUmidade = db.ref('users/' + uid + '/sensor/umidade');
-
-        refUmidade.on("value", (snapshot) => {
-            const data = snapshot.val();
-            const numeros = Object.keys(data);
-            const ultimaChave = numeros[numeros.length -1];
-            const ultimoValor = data[ultimaChave];
-
-            console.log("Dados recuperados:", data);
-            
-
-            // Exemplo de exibição no HTML
-            document.getElementById("saidaUmidade").textContent = ultimoValor + " %";
-
-            criarOuAtualizarGraficoUmidade(ultimoValor);
-        });
-    }
-});
-
 
 function parseValorHistorico(valorString) {
     const partes = valorString.split(' ');

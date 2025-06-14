@@ -15,7 +15,7 @@ firebase.auth().onAuthStateChanged((user) => {
         // 3. Pega o UID do usuário e cria a referência DINÂMICA
         const uid = user.uid;
         const refTemperatura = db.ref('users/' + uid + '/sensor/temperatura');
-        
+
         refTemperatura.on("value", (snapshot) => {
             const data = snapshot.val();
             const numeros = Object.keys(data);
@@ -24,7 +24,7 @@ firebase.auth().onAuthStateChanged((user) => {
             console.log("Dados recuperados:", data);
             
             // Exemplo de exibição no HTML
-            document.getElementById("saidaTemperatura").textContent = ultimoValor + " °C";
+            document.getElementById("saidaTemperatura").textContent = Math.round(ultimoValor) + " °C";
 
             criarOuAtualizarGraficoTemperatura(ultimoValor);
             
