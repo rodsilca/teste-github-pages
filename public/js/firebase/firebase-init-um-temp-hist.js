@@ -24,7 +24,7 @@ firebase.auth().onAuthStateChanged((user) => {
             console.log("Dados recuperados:", data);
             
             // Exemplo de exibição no HTML
-            document.getElementById("saidaTemperatura").textContent = ultimoValor + " °C";
+            document.getElementById("saidaTemperatura").textContent = ultimoValor;
 
             criarOuAtualizarGraficoTemperatura(ultimoValor);
             
@@ -52,7 +52,7 @@ firebase.auth().onAuthStateChanged((user) => {
             
 
             // Exemplo de exibição no HTML
-            document.getElementById("saidaUmidade").textContent = ultimoValor + " %";
+            document.getElementById("saidaUmidade").textContent = ultimoValor;
 
             criarOuAtualizarGraficoUmidade(ultimoValor);
         });

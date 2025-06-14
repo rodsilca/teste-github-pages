@@ -25,7 +25,7 @@ firebase.auth().onAuthStateChanged((user) => {
             console.log("Dados recuperados:", data);
             
             // Exemplo de exibição no HTML
-            document.getElementById("saidaTemperatura").textContent = ultimoValor + " °C";
+            document.getElementById("saidaTemperatura").textContent = Math.round(ultimoValor) + " °C";
 
             criarOuAtualizarGraficoTemperatura(ultimoValor);
             
